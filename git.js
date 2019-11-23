@@ -5,13 +5,38 @@
 	 * A Git repository.
 	 *
 	 * @param {string} name	 name of repo.
-	 */
+    */
     class Git {
         constructor(name) {
             this.name = name;
             this.lastCommitId = -1;
             let master = new Branch("master", null);
             this.HEAD = master;
+        }
+
+        /**
+         * Make a commit.
+         * @param  {string} message Commit message.
+         * @return {Commit}         Created commit object.
+        */
+        commit(message) {
+            let commit = new Commit(++this.lastCommitId, this.HEAD.commit, message);
+            this.HEAD.commit = commit;
+            return commit;
+        }
+
+        /**
+         * Get a log.
+         * @return {Array}     Commits in reverse chronological order
+        */
+        log() {
+            let history = [],
+                commit = this.HEAD.commit;
+            while(commit) {
+                history.push(commit);
+                commit = commit.parent;
+            }
+            return history;
         }
     }
     
@@ -44,31 +69,6 @@
             this.commit = commit;
         }
     }
-    
-    /**
-	 * Make a commit.
-	 * @param  {string} message Commit message.
-	 * @return {Commit}         Created commit object.
-	 */
-    Git.prototype.commit = function(message) {
-        let commit = new Commit(++this.lastCommitId, this.HEAD.commit, message);
-        this.HEAD.commit = commit;
-        return commit;
-    };
-
-    /**
-	 * Get a log.
-	 * @return {Array}     Commits in reverse chronological order
-	 */
-    Git.prototype.log = function() {
-        let history = [],
-            commit = this.HEAD.commit;
-        while(commit) {
-            history.push(commit);
-            commit = commit.parent;
-        }
-        return history;
-    };
 
     // expose Git class to window
     window.Git = Git;
