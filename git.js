@@ -39,7 +39,7 @@
     * @param {Commit} commit    get the lastest commit
     */
     class Branch {
-        constructor() {
+        constructor(name, commit) {
             this.name = name;
             this.commit = commit;
         }
