@@ -10,9 +10,35 @@
         constructor(name) {
             this.name = name;
             this.lastCommitId = -1;
+            this.branches = [];
             let master = new Branch("master", null);
+            this.branches.push(master);
             this.HEAD = master;
         }
+
+        /**
+        * Checkout method
+        * switch to another branch
+        *
+        * @param {string} branchName   name of branch
+        */
+       checkout(branchName) {
+           this.branches.forEach(branch => {
+               if(branch.name === branchName) {
+                   console.log(`Switching to existing branch: ${branchName}`);
+                   this.HEAD = branch;
+                   return this;
+               }
+           });
+
+           let newBranch = new Branch(branchName, this.HEAD.commit);
+           this.branches.push(newBranch);
+           this.HEAD = newBranch;
+           console.log(`Switched to new branch: ${newBranch}`);
+           return this;
+       }
+       // git checkout existing-branch
+       // git checkout -b new-branch
 
         /**
          * Make a commit.
@@ -77,5 +103,6 @@
     // command: git init
     repo.commit("initial commit");
     // command: git commit -m "initial commit"
+    repo.checkout("master");
 })();
 
