@@ -10,7 +10,8 @@
         constructor(name) {
             this.name = name;
             this.lastCommitId = -1;
-            this.HEAD = null;
+            let master = new Branch("master", null);
+            this.HEAD = master;
         }
     }
     
@@ -29,6 +30,20 @@
             this.message = message;
         }
     }
+
+    /**
+    * Branch class
+    * set branch
+    *
+    * @param {string} name      name the branch
+    * @param {Commit} commit    get the lastest commit
+    */
+    class Branch {
+        constructor() {
+            this.name = name;
+            this.commit = commit;
+        }
+    }
     
     /**
 	 * Make a commit.
@@ -36,8 +51,8 @@
 	 * @return {Commit}         Created commit object.
 	 */
     Git.prototype.commit = function(message) {
-        let commit = new Commit(++this.lastCommitId, this.HEAD, message);
-        this.HEAD = commit;
+        let commit = new Commit(++this.lastCommitId, this.HEAD.commit, message);
+        this.HEAD.commit = commit;
         return commit;
     };
 
@@ -47,7 +62,7 @@
 	 */
     Git.prototype.log = function() {
         let history = [],
-            commit = this.HEAD;
+            commit = this.HEAD.commit;
         while(commit) {
             history.push(commit);
             commit = commit.parent;
